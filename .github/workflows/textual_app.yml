@@ -7,7 +7,7 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ 'macos-latest']
+        os: [ 'macos-15-large']
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
@@ -20,8 +20,11 @@ jobs:
       run: uv sync 
     - name: Run your tests
       run: uv run nuitka --mode=app --include-data-files=OsmosePresets.json=OsmosePresets.json --include-data-files='**.tcss=./' --remove-output --assume-yes-for-downloads osmose_presets.py
-    - name: Upload main.exe
+    - name: Zip entire workspace
+      run: |
+        zip -r osmose_presets_workspace.zip . -x '*.git*'
+    - name: Upload workspace zip
       uses: actions/upload-artifact@v4
       with:
-        name: osmose_presets_macos
-        path: osmose_presets.app
+        name: osmose_presets_workspace
+        path: osmose_presets_workspace.zip
