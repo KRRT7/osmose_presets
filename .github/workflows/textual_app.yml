@@ -1,0 +1,27 @@
+name: textual app macos
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ 'macos-latest']
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        python-version: "3.12"
+
+    - name: Install dependencies
+      run: uv sync 
+    - name: Run your tests
+      run: uv run nuitka --mode=app --run --include-data-files=OsmosePresets.json=OsmosePresets.json --include-data-files='**.tcss=./' --remove-output osmose_presets.py
+    - name: Upload main.exe
+      uses: actions/upload-artifact@v4
+      with:
+        name: osmose_presets_macos
+        path: osmose_presets.app
