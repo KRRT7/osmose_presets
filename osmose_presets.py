@@ -1,3 +1,10 @@
+import sys
+import os
+
+log_path = os.path.expanduser("~/osmose_presets.log")
+sys.stdout = open(log_path, "w")
+sys.stderr = sys.stdout
+
 from textual.app import App, ComposeResult  # , RenderResult
 from textual.containers import Horizontal, Vertical, VerticalScroll
 from textual.widgets import Static, Header, Footer
